@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kirish</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body style="background-color: powderblue;">
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h2>Kirish</h2>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button  type="submit" class="btn btn-primary btn-block">login</button>
+                        </form>
+                    </div>
+                    <div class="container mt-1" style="text-align: center;"><a href="{% url 'register' %}" style="color: red;">Akkauntingiz mavjud emasmi?</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

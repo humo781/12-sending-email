@@ -1,53 +1,35 @@
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
-from django.shortcuts import render, redirect, reverse, get_object_or_404
+from django.urls import reverse_lazy
+from django.views.generic import DetailView, ListView, CreateView
+from django.views.generic.edit import DeleteView, UpdateView
+from .mixins import BookMixin
 from .models import Book
-from .forms import BookForm
 
 
-@login_required
-def book_list(request):
-    books = Book.objects.all()
-    ctx = {'books': books}
-    return render(request, 'book/book_list.html', ctx)
+class BookListView(ListView):
+    model = Book
+    template_name = "book/book_list.html"
+    context_object_name = "books"
+
+class BookDetailView(BookMixin, DetailView):
+    template_name = 'book/book_detail.html'
 
 
-def book_detail(request, pk):
-    book = Book.objects.get(pk=pk)
-    ctx = {'book': book}
-    return render(request, 'book/book_detail.html', ctx)
+class BookCreateView(BookMixin, CreateView):
+    template_name = 'book/add_book.html'
+    fields = ('title', 'description', 'author_name', 'published_at')
 
+    def get_success_url(self):
+        return reverse_lazy('list')
 
-def create_book(request):
-    if request.method == 'POST':
-        form = BookForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('list')
-        else:
-            return HttpResponse("Form is invalid")
-    form = BookForm()
-    ctx = {'form': form}
-    return render(request, 'book/add_book.html', ctx)
+class BookUpdateView(BookMixin, UpdateView):
+    template_name = 'book/add_book.html'
+    fields = ('title', 'description', 'author_name', 'published_at')
 
+    def get_success_url(self):
+        return reverse_lazy('list')
 
-def update_book(request, pk):
-    book = get_object_or_404(Book, pk=pk)
-    if request.method == "POST":
-        form = BookForm(request.POST, instance=book)
-        if form.is_valid():
-            form.save()
-            return redirect('detail', pk=pk)
-        else:
-            return HttpResponse("Form is invalid")
-    form = BookForm(instance=book)
-    ctx = {'form': form, 'book': book}
-    return render(request, 'book/add_book.html', ctx)
+class BookDeleteView(BookMixin, DeleteView):
+    template_name = 'book/confirm.html'
 
-
-def delete_book(request, pk):
-    book = get_object_or_404(Book, pk=pk)
-    if request.method == "POST":
-        book.delete()
-        return redirect('list')
-    return render(request, 'book/confirm.html', {'book': book})
+    def get_success_url(self):
+        return reverse_lazy('list')

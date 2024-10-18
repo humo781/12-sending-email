@@ -10,10 +10,10 @@ def user_register(request):
             form.save()
             return redirect('login')
         else:
-            return render(request, 'accaunt/user_register.html', {'errors': form.error_messages})
+            return render(request, 'account/user_register.html', {'errors': form.error_messages})
             # print(form.error_messages)
     form = RegisterForm()
-    return render(request, 'accaunt/user_register.html', {'form': form})
+    return render(request, 'account/user_register.html', {'form': form})
 
 
 def login_view(request):
@@ -27,4 +27,4 @@ def login_view(request):
                 return redirect('list')
 
     form = LoginForm
-    return render(request, 'accaunt/login.html', {'form': form})
+    return render(request, 'account/login.html', {'form': form})
